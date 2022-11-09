@@ -12,7 +12,16 @@ const userPostDataRouter = require("./router/user-post-data");
 
 const PORT = process.env.APPPORT ?? process.env.PORT;
 
-app.use(cors({}));
+app.use(
+  cors({
+    credentials: true,
+    origin: "*",
+    exposedHeaders: [
+      "Access-Control-Allow-Headers",
+      "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version",
+    ],
+  })
+);
 app.use(express.json());
 
 app.get("/", (req, res) => {
