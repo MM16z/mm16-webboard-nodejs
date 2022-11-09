@@ -14,7 +14,7 @@ const jwtAuth = require("./router/jwtauth");
 const userServiceRouter = require("./router/user-service");
 const userPostDataRouter = require("./router/user-post-data");
 
-const PORT = process.env.APPPORT ?? 8080;
+const PORT = process.env.APPPORT ?? process.env.PORT;
 
 app.use(cors());
 app.use(express.json());
