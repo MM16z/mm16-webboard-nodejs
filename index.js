@@ -3,10 +3,6 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const bcrypt = require("bcrypt");
-const saltRounds = 10;
-var jwtToken = require("jsonwebtoken");
-const mm16zToken = "mm16z-login-token-16";
 
 const registerRouter = require("./router/register");
 const loginRouter = require("./router/login");
