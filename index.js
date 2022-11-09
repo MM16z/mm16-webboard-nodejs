@@ -31,5 +31,5 @@ app.use("/", userPostDataRouter);
 // app.use("/", userPostLikedRouter);
 
 app.listen(PORT, () => {
-  console.log(`runing on http://localhost:3001`);
+  console.log(`runing on http://localhost:${PORT}`);
 });
