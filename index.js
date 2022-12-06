@@ -13,6 +13,7 @@ const userPostDataRouter = require("./router/user-post-data");
 const PORT = process.env.APPPORT ?? process.env.PORT;
 
 app.use(cors());
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 app.get("/", (req, res) => {
