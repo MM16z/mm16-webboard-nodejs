@@ -10,10 +10,13 @@ const router = express.Router();
 router.post("/jwtauth", jsonParser, (req, res, next) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
-    let decoded = jwt.verify(token, mm16ztoken);
-    res.json({ status: "ok", decoded });
+    jwt.verify(token, mm16ztoken, (err, decoded) => {
+      if (err) return res.json({ status: "error", message: err.message });
+      res.json({ status: "ok", decoded });
+      next();
+    });
   } catch (err) {
-    res.json({ status: "error", message: err.message });
+    res.json({ status: "error", message: err });
   }
 });
 
