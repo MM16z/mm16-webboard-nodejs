@@ -15,15 +15,13 @@ router.post("/login", jsonParser, (req, res, next) => {
     "SELECT * FROM `mm16-webboard`.`users` WHERE email=?",
     [req.body.email],
     (err, email, fields) => {
-      if (err) {
-        res.json({ status: "error", message: err });
-        return;
-      }
-      if (email.length == 0) {
-        res.json({ status: "error", message: "user not found" });
-        return;
-      }
+      if (err) return res.json({ status: "error", message: err });
+
+      if (email.length == 0)
+        return res.json({ status: "error", message: "user not found" });
+
       bcrypt.compare(req.body.password, email[0].password, (err, isLogin) => {
+        if (err) return;
         if (isLogin) {
           const accessToken = jwt.sign(
             {
@@ -47,13 +45,12 @@ router.post("/login", jsonParser, (req, res, next) => {
               expiresIn: "1d",
             }
           );
-          res.json({ status: "ok", message: "login success", accessToken });
           res.cookie("jwtToken", refreshToken, {
             httpOnly: true,
             secure: true,
             maxAge: 24 * 60 * 60 * 1000,
           });
-          return;
+          res.json({ status: "ok", message: "login success", accessToken });
         } else {
           res.json({ status: "error", message: err.message });
         }
