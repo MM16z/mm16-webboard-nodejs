@@ -47,7 +47,6 @@ router.post("/login", jsonParser, (req, res, next) => {
           );
           res.cookie("jwtToken", refreshToken, {
             httpOnly: true,
-            secure: true,
             maxAge: 24 * 60 * 60 * 1000,
           });
           res.json({ status: "ok", message: "login success", accessToken });
