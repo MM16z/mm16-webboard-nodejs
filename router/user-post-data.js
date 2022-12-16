@@ -64,6 +64,7 @@ router.get("/user_posts", async (req, res) => {
 
 router.get("/current_user_posts", async (req, res) => {
   const currentUserId = req.query.currentUserId || null;
+  console.log(req.headers.Cookie);
   try {
     db.query(
       `SELECT * FROM posts WHERE post_from_userId = "${currentUserId}"`,
