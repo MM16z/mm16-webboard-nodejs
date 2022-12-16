@@ -7,6 +7,8 @@ router.get("/user_posts", async (req, res) => {
   let offset = null;
   const currentQuery = Number(req.query.currentQuery);
   const currentUserId = req.query.currentUserId || null;
+  console.log(req.headers.Cookie);
+  console.log(currentUserId);
   if (currentQuery) {
     offset = (currentQuery - 1) * 6;
   } else {
@@ -64,7 +66,7 @@ router.get("/user_posts", async (req, res) => {
 
 router.get("/current_user_posts", async (req, res) => {
   const currentUserId = req.query.currentUserId || null;
-  console.log(req.headers.Cookie);
+
   try {
     db.query(
       `SELECT * FROM posts WHERE post_from_userId = "${currentUserId}"`,
