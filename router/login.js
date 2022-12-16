@@ -57,7 +57,6 @@ router.post("/login", jsonParser, (req, res, next) => {
             // httpOnly: true,
             // secure: true,
           });
-          res.send();
           res.json({
             status: "ok",
             message: "login success",
