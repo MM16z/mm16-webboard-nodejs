@@ -6,7 +6,7 @@ const router = express.Router();
 router.get("/user_posts", async (req, res) => {
   let offset = null;
   const currentQuery = Number(req.query.currentQuery);
-  const currentUserId = req.query.currentUserId;
+  const currentUserId = req.cookies?.userId || null;
   if (currentQuery) {
     offset = (currentQuery - 1) * 6;
   } else {
@@ -31,9 +31,7 @@ router.get("/user_posts", async (req, res) => {
        ))) as comments
        FROM posts
        LEFT JOIN comments ON comments.at_post_id = post_id
-       LEFT JOIN postliked ON postliked.at_post_id = posts.post_id AND postliked.user_id = ${
-         currentUserId ? currentUserId : null
-       }
+       LEFT JOIN postliked ON postliked.at_post_id = posts.post_id AND postliked.user_id = ${currentUserId}
        GROUP BY post_id
        ORDER BY post_id, "asc"
        LIMIT ${offset},6`,
@@ -65,7 +63,7 @@ router.get("/user_posts", async (req, res) => {
 });
 
 router.get("/current_user_posts", async (req, res) => {
-  const currentUserId = req.query.currentUserId;
+  const currentUserId = req.cookies?.userId || null;
   try {
     db.query(
       `SELECT * FROM posts WHERE post_from_userId = "${currentUserId}"`,
