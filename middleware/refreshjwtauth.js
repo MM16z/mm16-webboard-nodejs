@@ -12,26 +12,28 @@ const mm16zrefreshtoken = "mm16z-login-refresh-token-1616";
 router.post("/refreshjwtauth", jsonParser, (req, res, next) => {
   const cookies = req.cookies;
   if (!cookies?.jwtToken) return res.sendStatus(401);
-  console.log(cookies);
   const refreshToken = cookies.jwtToken;
   db.query(
-    "SELECT * FROM `mm16-webboard`.`users` WHERE email=?",
-    [req.cookies.jwtToken],
-    (err, email, field) => {
-      if (err) return res.json({ errMessage: err.message });
-      if (email[0].refresh_token !== refreshToken) return res.sendStatus(403);
-      jwt.verify(cookies.jwtToken, mm16zrefreshtoken, (err, decoded) => {
-        if (err) return res.json({ errMessage: err });
-        if (email !== decoded.email) return res.sendStatus(403);
+    "SELECT * FROM `mm16-webboard`.`users` WHERE username=?",
+    [req.body.username],
+    (err, username, field) => {
+      if (err) return res.sendStatus(403);
+      if (!username[0]) return res.sendStatus(204);
+      if (username[0]?.refresh_token !== refreshToken)
+        return res.sendStatus(403);
+      jwt.verify(refreshToken, mm16zrefreshtoken, (err, decoded) => {
+        if (err) return res.sendStatus(403);
+        if (username[0].username !== decoded.username)
+          return res.sendStatus(403);
         const accessToken = jwt.sign(
           {
-            email: email[0].email,
-            username: email[0].username,
-            userId: email[0].user_id,
+            email: username[0].email,
+            username: username[0].username,
+            userId: username[0].user_id,
           },
           mm16ztoken,
           {
-            expiresIn: "900s",
+            expiresIn: "10s",
           }
         );
         res.json({ status: "ok", accessToken });

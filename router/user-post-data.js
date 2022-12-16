@@ -7,13 +7,11 @@ router.get("/user_posts", async (req, res) => {
   let offset = null;
   const currentQuery = Number(req.query.currentQuery);
   const currentUserId = req.query.currentUserId;
-  const currentUser = req.query.currentUser;
   if (currentQuery) {
     offset = (currentQuery - 1) * 6;
   } else {
     offset = 0;
   }
-
   try {
     db.query(
       `SELECT post_id, post_from, post_title, post_content, post_createdAt,
@@ -48,16 +46,6 @@ router.get("/user_posts", async (req, res) => {
       }
     );
     db.query(
-      `SELECT * FROM posts WHERE post_from = "${currentUser}"`,
-      function (err, results, fields) {
-        if (err) {
-          console.log(err);
-        } else {
-          userPostData = results;
-        }
-      }
-    );
-    db.query(
       `SELECT COUNT(post_id) as all_post_count FROM posts`,
       function (err, results, fields) {
         if (err) {
@@ -68,8 +56,25 @@ router.get("/user_posts", async (req, res) => {
         res.json({
           postsCount: postCount[0],
           allPosts: allPosts,
-          userPostData: userPostData,
         });
+      }
+    );
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+router.get("/current_user_posts", async (req, res) => {
+  const currentUserId = req.query.currentUserId;
+  try {
+    db.query(
+      `SELECT * FROM posts WHERE post_from_userId = "${currentUserId}"`,
+      function (err, results, fields) {
+        if (err) {
+          res.json({ error: err });
+        } else {
+          res.json({ userPostData: results });
+        }
       }
     );
   } catch (error) {

@@ -80,14 +80,10 @@ router.post("/user_post_comment", jsonParser, (req, res, next) => {
 router.post("/user_post_liked", jsonParser, (req, res, next) => {
   db.query(
     "INSERT INTO `mm16-webboard`.`postliked` (`user_id`, `at_post_id`) VALUES (?, ?)",
-    [req.body.userId, req.body.postid],
+    [req.body.userid, req.body.postid],
     (err, results, fields) => {
-      if (err) {
-        res.json({ status: "error", message: err });
-        return;
-      } else {
-        res.json({ status: "ok", message: "Success" });
-      }
+      if (err) return res.json({ status: "error", message: err });
+      res.json({ status: "ok", message: "Success" });
     }
   );
 });
@@ -95,14 +91,10 @@ router.post("/user_post_liked", jsonParser, (req, res, next) => {
 router.post("/user_post_unliked", jsonParser, (req, res, next) => {
   db.query(
     "DELETE FROM `mm16-webboard`.`postliked` WHERE (`user_id`=? AND `at_post_id`=?)",
-    [req.body.userId, req.body.postId],
+    [req.body.userid, req.body.postid],
     (err, results, fields) => {
-      if (err) {
-        res.json({ status: "error", message: err });
-        return;
-      } else {
-        res.json({ status: "ok", message: "Success" });
-      }
+      if (err) return res.json({ status: "error", message: err });
+      res.json({ status: "ok", message: "Success" });
     }
   );
 });
