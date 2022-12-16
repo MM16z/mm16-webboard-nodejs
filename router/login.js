@@ -57,7 +57,7 @@ router.post("/login", jsonParser, (req, res, next) => {
           res.cookie("userId", email[0].user_id, {
             // httpOnly: true,
             // secure: true,
-            sameSite: "none",
+            sameSite: "lax",
           });
           res.json({
             status: "ok",
