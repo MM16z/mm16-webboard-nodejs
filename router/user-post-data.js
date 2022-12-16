@@ -6,7 +6,7 @@ const router = express.Router();
 router.get("/user_posts", async (req, res) => {
   let offset = null;
   const currentQuery = Number(req.query.currentQuery);
-  const currentUserId = req.cookies?.userId || null;
+  const currentUserId = req.query.currentUserId || null;
   if (currentQuery) {
     offset = (currentQuery - 1) * 6;
   } else {
@@ -63,10 +63,7 @@ router.get("/user_posts", async (req, res) => {
 });
 
 router.get("/current_user_posts", async (req, res) => {
-  const currentUserId = req.cookies?.userId || null;
-  console.log(currentUserId);
-  console.log(req.cookies);
-  console.log(req.headers.cookie);
+  const currentUserId = req.query.currentUserId || null;
   try {
     db.query(
       `SELECT * FROM posts WHERE post_from_userId = "${currentUserId}"`,
