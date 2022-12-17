@@ -23,6 +23,7 @@ router.post("/refreshjwtauth", jsonParser, (req, res, next) => {
         return res.sendStatus(403);
       jwt.verify(refreshToken, mm16zrefreshtoken, (err, decoded) => {
         if (err) return res.sendStatus(403);
+        // if (err) return res.json({ ERROR: err });
         if (username[0].username !== decoded.username)
           return res.sendStatus(403);
         const accessToken = jwt.sign(
