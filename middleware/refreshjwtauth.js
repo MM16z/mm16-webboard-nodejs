@@ -7,8 +7,8 @@ var bodyParser = require("body-parser");
 var jsonParser = bodyParser.json();
 var jwt = require("jsonwebtoken");
 
-const mm16ztoken = "private";
-const mm16zrefreshtoken = "private";
+const mm16ztoken = "mm16z-login-token-1616";
+const mm16zrefreshtoken = "mm16z-login-refresh-token-1616";
 
 router.post("/refreshjwtauth", jsonParser, (req, res, next) => {
   const cookies = req.cookies;
