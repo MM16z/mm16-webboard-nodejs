@@ -54,11 +54,11 @@ router.post("/login", jsonParser, (req, res, next) => {
             maxAge: 24 * 60 * 60 * 1000,
             sameSite: "none",
           });
-          res.cookie("userId", email[0].user_id, {
-            httpOnly: true,
-            secure: true,
-            sameSite: "none",
-          });
+          // res.cookie("userId", email[0].user_id, {
+          //   httpOnly: true,
+          //   secure: true,
+          //   sameSite: "none",
+          // });
           res.json({
             status: "ok",
             message: "login success",
