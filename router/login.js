@@ -56,14 +56,14 @@ router.post("/login", jsonParser, (req, res, next) => {
           });
           res.cookie("userId", email[0].user_id, {
             httpOnly: true,
-            secure: true,
-            sameSite: "none",
+            sameSite: "strict",
           });
           res.json({
             status: "ok",
             message: "login success",
             accessToken,
           });
+          res.send("Cookie set");
         } else {
           res.json({ status: "error", message: err });
         }
