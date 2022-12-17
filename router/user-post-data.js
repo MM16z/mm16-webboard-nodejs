@@ -7,8 +7,6 @@ router.get("/user_posts", async (req, res) => {
   let offset = null;
   const currentQuery = Number(req.query.currentQuery);
   const currentUserId = req.query.currentUserId || null;
-  console.log("1", req.headers.Cookie);
-  console.log("2", currentUserId);
   if (currentQuery) {
     offset = (currentQuery - 1) * 6;
   } else {
