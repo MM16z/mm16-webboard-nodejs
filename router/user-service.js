@@ -11,8 +11,13 @@ router.post("/user_post_create", jsonParser, (req, res, next) => {
     return;
   }
   db.query(
-    "INSERT INTO `mm16-webboard`.`posts` (`post_from`, `post_title`, `post_content`) VALUES (?, ?, ?)",
-    [req.body.postfrom, req.body.posttitle, req.body.postcontent],
+    "INSERT INTO `mm16-webboard`.`posts` (`post_from`, `post_from_userId`, `post_title`, `post_content`) VALUES (?, ?, ?, ?)",
+    [
+      req.body.postfrom,
+      req.body.postfromuserid,
+      req.body.posttitle,
+      req.body.postcontent,
+    ],
     (err, results, fields) => {
       if (err) {
         res.json({ status: "error", message: err });
