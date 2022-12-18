@@ -35,7 +35,7 @@ router.post("/refreshjwtauth", jsonParser, (req, res, next) => {
           },
           mm16ztoken,
           {
-            expiresIn: "10s",
+            expiresIn: "1d",
           }
         );
         res.json({ status: "ok", accessToken });
