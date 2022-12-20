@@ -4,6 +4,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const { auth } = require("express-openid-connect");
 
 const jwtAuth = require("./middleware/jwtauth");
 const refreshJwtAuth = require("./middleware/refreshjwtauth");
@@ -20,8 +21,20 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());
 
+const config = {
+  authRequired: false,
+  auth0Logout: true,
+  secret: process.env.AUTH0KEY,
+  baseURL: "https://mm16z-webboard-nextjs-fullstack.vercel.app",
+  clientID: "Hl0bruG8s7tpZTdmSDZi1TQPUO26Ac4x",
+  issuerBaseURL: "https://dev-xfh5b1jpuyqqdrb6.jp.auth0.com",
+};
+
+app.use(auth(config));
+
 app.get("/", (req, res) => {
   res.json({ ServerStatus: "Running..." });
+  console.log(req.oidc.isAuthenticated() ? "Logged in" : "Logged out");
 });
 
 app.use("/", jwtAuth);
