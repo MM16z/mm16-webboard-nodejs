@@ -41,7 +41,7 @@ app.use("/", jwtAuth);
 app.use("/", refreshJwtAuth);
 app.use("/", userPostDataRouter);
 app.use("/", registerRouter);
-app.use("/", loginRouter);
+// app.use("/", loginRouter);
 app.use("/", userServiceRouter);
 app.use("/", logoutRouter);
 
