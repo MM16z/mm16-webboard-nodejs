@@ -33,7 +33,6 @@ router.post("/login", jsonParser, (req, res, next) => {
           );
           const refreshToken = jwt.sign(
             {
-              email: email[0].email,
               username: email[0].username,
               userId: email[0].user_id,
             },
