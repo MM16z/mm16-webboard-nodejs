@@ -22,7 +22,6 @@ app.use(cookieParser());
 
 app.get("/", (req, res) => {
   res.json({ ServerStatus: "Running..." });
-  console.log(req.oidc.isAuthenticated() ? "Logged in" : "Logged out");
 });
 
 app.use("/", jwtAuth);
