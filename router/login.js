@@ -28,7 +28,7 @@ router.post("/login", jsonParser, (req, res, next) => {
             },
             mm16ztoken,
             {
-              expiresIn: "900s",
+              expiresIn: "10s",
             }
           );
           const refreshToken = jwt.sign(
@@ -38,7 +38,7 @@ router.post("/login", jsonParser, (req, res, next) => {
             },
             mm16zrefreshtoken,
             {
-              expiresIn: "10s",
+              expiresIn: "15s",
             }
           );
           db.query(
