@@ -38,7 +38,7 @@ router.post("/login", jsonParser, (req, res, next) => {
             },
             mm16zrefreshtoken,
             {
-              expiresIn: "1d",
+              expiresIn: "10s",
             }
           );
           db.query(
