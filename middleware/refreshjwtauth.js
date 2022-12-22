@@ -16,7 +16,6 @@ router.post("/refreshjwtauth", jsonParser, (req, res, next) => {
     "https://mm16z-webboard-nextjs-fullstack.vercel.app"
   );
   const cookies = req.cookies;
-  console.log(cookies?.jwtToken);
   if (!cookies?.jwtToken) return res.sendStatus(401);
   const refreshToken = cookies.jwtToken;
   db.query(
@@ -24,9 +23,6 @@ router.post("/refreshjwtauth", jsonParser, (req, res, next) => {
     [refreshToken],
     (err, username, field) => {
       if (err) return res.sendStatus(403);
-      // if (!username[0]) res.sendStatus(204);
-      // if (username[0]?.refresh_token !== refreshToken)
-      //   return res.sendStatus(403);
       if (!username[0]) return res.sendStatus(204);
       if (username[0].refresh_token !== refreshToken)
         return res.sendStatus(403);
