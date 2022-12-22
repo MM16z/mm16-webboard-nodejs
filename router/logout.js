@@ -16,10 +16,19 @@ router.post("/logout", jsonParser, (req, res, next) => {
     (err, username, field) => {
       if (err) return res.sendStatus(403);
       if (username[0].refresh_token !== refreshToken) {
-        res.clearCookie("jwtToken", { httpOnly: true, secure: true });
+        res.clearCookie("jwtToken", {
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
+        });
         return res.sendStatus(204);
       }
       if (username[0].refresh_token === refreshToken) {
+        res.clearCookie("jwtToken", {
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
+        });
         db.query(
           "UPDATE `mm16-webboard`.`users` SET `refresh_token` =? WHERE (`username` =?)",
           [null, username[0].username],
@@ -27,7 +36,6 @@ router.post("/logout", jsonParser, (req, res, next) => {
             if (err) return res.sendStatus(403);
           }
         );
-        res.clearCookie("jwtToken", { httpOnly: true, secure: true });
         return res.sendStatus(204);
       }
     }
