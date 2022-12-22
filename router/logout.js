@@ -8,22 +8,28 @@ var jsonParser = bodyParser.json();
 
 router.post("/logout", jsonParser, (req, res, next) => {
   const cookies = req.cookies;
-  if (!cookies?.jwtToken) return res.sendStatus(203);
+  if (!cookies?.jwtToken) return res.sendStatus(204);
   const refreshToken = cookies.jwtToken;
   db.query(
-    "SELECT * FROM `mm16-webboard`.`users` WHERE email=?",
-    [req.body.email],
-    (err, email, field) => {
+    "SELECT * FROM `mm16-webboard`.`users` WHERE refresh_token=?",
+    [refreshToken],
+    (err, username, field) => {
       if (err) return res.sendStatus(403);
-      if (email[0].refresh_token !== refreshToken) return res.sendStatus(403);
-      db.query(
-        "DELETE FROM `mm16-webboard`.`users` WHERE (`refresh_token` =?)",
-        [refreshToken],
-        (err) => {
-          if (err) return res.sendStatus(403);
-          res.clearCookie("jwtToken", { httpOnly: true });
-        }
-      );
+      if (username[0].refresh_token !== refreshToken) {
+        res.clearCookie("jwtToken", { httpOnly: true, secure: true });
+        return res.sendStatus(204);
+      }
+      if (username[0].refresh_token === refreshToken) {
+        db.query(
+          "UPDATE `mm16-webboard`.`users` SET `refresh_token` =? WHERE (`username` =?)",
+          [null, username[0].username],
+          (err) => {
+            if (err) return res.sendStatus(403);
+            res.clearCookie("jwtToken", { httpOnly: true, secure: true });
+            return res.sendStatus(204);
+          }
+        );
+      }
     }
   );
 });
