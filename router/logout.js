@@ -25,10 +25,10 @@ router.post("/logout", jsonParser, (req, res, next) => {
           [null, username[0].username],
           (err) => {
             if (err) return res.sendStatus(403);
-            res.clearCookie("jwtToken", { httpOnly: true, secure: true });
-            return res.sendStatus(204);
           }
         );
+        res.clearCookie("jwtToken", { httpOnly: true, secure: true });
+        return res.sendStatus(204);
       }
     }
   );
