@@ -4,14 +4,15 @@ const db = require("../db/");
 const router = express.Router();
 
 router.get("/user_posts/:offset", async (req, res) => {
-  let offset = null;
-  const currentQuery = Number(req.query.currentQuery);
+  // let offset = null;
+  let offset = parseInt(req.params.offset);
+  // const currentQuery = Number(req.query.currentQuery);
   const currentUserId = req.query.currentUserId || null;
-  if (currentQuery) {
-    offset = (currentQuery - 1) * 6;
-  } else {
-    offset = 0;
-  }
+  // if (currentQuery) {
+  //   offset = (currentQuery - 1) * 6;
+  // } else {
+  //   offset = 0;
+  // }
   try {
     db.query(
       `SELECT post_id, post_from, post_title, post_content, post_createdAt,
