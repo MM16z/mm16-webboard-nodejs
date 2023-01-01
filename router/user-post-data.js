@@ -3,7 +3,7 @@ const db = require("../db/");
 
 const router = express.Router();
 
-router.get("/user_posts", async (req, res) => {
+router.get("/user_posts/:offset", async (req, res) => {
   let offset = null;
   const currentQuery = Number(req.query.currentQuery);
   const currentUserId = req.query.currentUserId || null;
