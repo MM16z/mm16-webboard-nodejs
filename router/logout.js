@@ -11,7 +11,7 @@ router.post("/logout", jsonParser, async (req, res, next) => {
   if (!cookies?.jwtToken) return res.sendStatus(204);
   const refreshToken = cookies.jwtToken;
   try {
-    const query = `SELECT * FROM "mm16-webboard".users WHERE refresh_token = $`;
+    const query = `SELECT * FROM "mm16-webboard".users WHERE refresh_token = $1`;
     const values = [refreshToken];
     const username = await db.oneOrNone(query, values);
     if (!username) {
