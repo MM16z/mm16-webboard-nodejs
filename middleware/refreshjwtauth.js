@@ -47,7 +47,9 @@ router.post("/refreshjwtauth", jsonParser, async (req, res, next) => {
   //   }
   // );
   try {
-    db.any("SELECT * FROM users WHERE refresh_token=$1", [refreshToken]);
+    db.any(`SELECT * FROM "mm16-webboard".users WHERE refresh_token=$1`, [
+      refreshToken,
+    ]);
     if (!username[0]) return res.sendStatus(204);
     if (username[0].refresh_token !== refreshToken) return res.sendStatus(403);
     jwt.verify(refreshToken, mm16zrefreshtoken, (err, decoded) => {

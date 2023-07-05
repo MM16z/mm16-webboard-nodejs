@@ -63,7 +63,7 @@ router.get("/user_posts/:offset", async (req, res) => {
     CASE WHEN postliked.user_id IS NOT NULL THEN TRUE ELSE FALSE END as isLiked,
     (
       SELECT COUNT(at_post_id)
-      FROM postliked
+      FROM "mm16-webboard".postliked
       WHERE at_post_id = post_id
     ) as post_liked_count,
     COALESCE(
@@ -77,13 +77,13 @@ router.get("/user_posts/:offset", async (req, res) => {
       ),
       '[]'::json
     ) as comments
-    FROM posts
-    LEFT JOIN comments ON comments.at_post_id = post_id
-    LEFT JOIN postliked ON postliked.at_post_id = posts.post_id AND postliked.user_id = $1
-    GROUP BY post_id
+    FROM "mm16-webboard".posts
+    LEFT JOIN "mm16-webboard".comments ON comments.at_post_id = post_id
+    LEFT JOIN "mm16-webboard".postliked ON postliked.at_post_id = posts.post_id AND postliked.user_id = $1
+    GROUP BY post_id 
     ORDER BY post_id ASC
     LIMIT $2
-    OFFSET $3`;
+    offset $3`;
     const postcountQuery = `SELECT COUNT(post_id) as all_post_count FROM posts`;
     const allPost = await db.any(allpostQuery, [currentUserId, 6, offset]);
     const postCount = await db.any(postcountQuery);
@@ -101,7 +101,7 @@ router.get("/user_posts/:offset", async (req, res) => {
 router.get("/current_user_posts", async (req, res) => {
   const currentUserId = req.query.currentUserId || null;
   try {
-    const query = `SELECT * FROM posts WHERE post_from_userId = $1`;
+    const query = `SELECT * FROM "mm16-webboard".posts WHERE post_from_userId = $1`;
     const results = await db.query(query, [currentUserId]);
     res.json({ userPostData: results });
   } catch (error) {
