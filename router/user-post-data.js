@@ -42,10 +42,8 @@ router.get("/user_posts/:offset", async (req, res) => {
         posts.post_id , postliked.user_id ASC
       ORDER BY
         posts.post_id
-      LIMIT
-        6,
-      OFFSET
-        $2`;
+      LIMIT 6,
+      OFFSET $2`;
 
     const values = [currentUserId, offset];
     const allPosts = await db.any(query, values);
