@@ -10,13 +10,18 @@ router.get("/user_posts/:offset", async (req, res) => {
   const currentUserId = req.query.currentUserId || null;
   try {
     const query = `
-      SELECT
+        SELECT
         posts.post_id,
         posts.post_from,
         posts.post_title,
         posts.post_content,
         posts.post_createdAt,
-        CASE WHEN postliked.user_id IS NOT NULL THEN TRUE ELSE FALSE END AS isLiked,
+        EXISTS (
+          SELECT 1
+          FROM "mm16-webboard".postliked
+          WHERE postliked.at_post_id = posts.post_id
+            AND postliked.user_id = $1
+        ) AS isLiked,
         (
           SELECT COUNT(at_post_id)
           FROM "mm16-webboard".postliked
@@ -38,8 +43,7 @@ router.get("/user_posts/:offset", async (req, res) => {
       FROM
       "mm16-webboard".posts
         LEFT JOIN "mm16-webboard".comments ON comments.at_post_id = posts.post_id
-        LEFT JOIN "mm16-webboard".postliked ON postliked.at_post_id = posts.post_id AND postliked.user_id = $1
-        GROUP BY post_id , postliked.user_id
+        GROUP BY post_id
         ORDER BY post_id ASC
         LIMIT 6
         offset $2`;
