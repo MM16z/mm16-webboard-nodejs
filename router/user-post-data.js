@@ -84,7 +84,7 @@ router.get("/user_posts/:offset", async (req, res) => {
     ORDER BY post_id ASC
     LIMIT $2
     offset $3`;
-    const postcountQuery = `SELECT COUNT(post_id) as all_post_count FROM posts`;
+    const postcountQuery = `SELECT COUNT(post_id) as all_post_count FROM "mm16-webboard".posts`;
     const allPost = await db.any(allpostQuery, [currentUserId, 6, offset]);
     const postCount = await db.any(postcountQuery);
     if (allPost && postCount) {
