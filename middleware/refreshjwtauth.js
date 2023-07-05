@@ -19,9 +19,10 @@ router.post("/refreshjwtauth", jsonParser, async (req, res, next) => {
   if (!cookies?.jwtToken) return res.sendStatus(401);
   const refreshToken = cookies.jwtToken;
   try {
-    db.any(`SELECT * FROM "mm16-webboard".users WHERE refresh_token=$1`, [
-      refreshToken,
-    ]);
+    const username = await db.any(
+      `SELECT * FROM "mm16-webboard".users WHERE refresh_token=$1`,
+      [refreshToken]
+    );
     if (!username[0]) return res.sendStatus(204);
     if (username[0].refresh_token !== refreshToken) return res.sendStatus(403);
     jwt.verify(refreshToken, mm16zrefreshtoken, (err, decoded) => {
