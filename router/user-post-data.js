@@ -16,7 +16,7 @@ router.get("/user_posts/:offset", async (req, res) => {
         posts.post_title,
         posts.post_content,
         posts.post_createdAt,
-        (postliked.user_id IS NOT NULL) AS isLiked,
+        CASE WHEN postliked.user_id IS NOT NULL THEN TRUE ELSE FALSE END AS isLiked,
         (
           SELECT COUNT(at_post_id)
           FROM "mm16-webboard".postliked
