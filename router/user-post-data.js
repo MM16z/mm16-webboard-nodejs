@@ -8,6 +8,7 @@ router.get("/user_posts/:offset", async (req, res) => {
   let offset = parseInt(req.params.offset);
   // const currentQuery = Number(req.query.currentQuery);
   const currentUserId = req.query.currentUserId || null;
+  console.log("currentUserId", currentUserId);
   try {
     const query = `
         SELECT
