@@ -39,7 +39,7 @@ router.get("/user_posts/:offset", async (req, res) => {
       "mm16-webboard".posts
         LEFT JOIN postliked ON postliked.at_post_id = posts.post_id AND postliked.user_id = $1
       GROUP BY
-        posts.post_id , 
+        posts.post_id , postliked.user_id
       ORDER BY
         posts.post_id ASC
       LIMIT
