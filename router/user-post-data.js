@@ -43,9 +43,9 @@ router.get("/user_posts/:offset", async (req, res) => {
       ORDER BY
         posts.post_id
       LIMIT
-        $2,
+        6,
       OFFSET
-        6`;
+        $2`;
 
     const values = [currentUserId, offset];
     const allPosts = await db.any(query, values);
