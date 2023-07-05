@@ -9,19 +9,16 @@ const db = require("../db");
 const saltRounds = 10;
 
 router.post("/register", jsonParser, (req, res, next) => {
-  bcrypt.hash(req.body.password, saltRounds, function (err, hash) {
-    db.query(
-      "INSERT INTO `mm16-webboard`.`users` (`username`, `email`, `password`) VALUES(?, ?, ?)",
-      [req.body.username, req.body.email, hash],
-      (err, result, fields) => {
-        if (err) {
-          res.json({ status: "error", message: err });
-          return;
-        } else {
-          res.json({ status: "ok", message: "success" });
-        }
-      }
-    );
+  bcrypt.hash(req.body.password, saltRounds, async function (err, hash) {
+    try {
+      const query = `INSERT INTO "mm16-webboard".users (username, email, password) VALUES ($1, $2, $3)`;
+      const values = [req.body.username, req.body.email, hash];
+      await db.none(query, values);
+      res.json({ status: "ok", message: "success" });
+    } catch (error) {
+      console.log(error);
+      res.json({ status: "error", message: error });
+    }
   });
 });
 

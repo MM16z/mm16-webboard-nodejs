@@ -10,66 +10,64 @@ const mm16zrefreshtoken = "mm16z-login-refresh-token-1616";
 
 const db = require("../db");
 
-router.post("/login", jsonParser, (req, res, next) => {
-  db.query(
-    "SELECT * FROM `mm16-webboard`.`users` WHERE email=?",
-    [req.body.email],
-    (err, email, fields) => {
-      if (err) return res.json({ status: "error", message: err });
-      if (email.length == 0)
-        return res.json({ status: "error", message: "user not found" });
-      bcrypt.compare(req.body.password, email[0].password, (err, isLogin) => {
-        if (isLogin) {
-          const accessToken = jwt.sign(
-            {
-              email: email[0].email,
-              username: email[0].username,
-              userId: email[0].user_id,
-            },
-            mm16ztoken,
-            {
-              expiresIn: "900s",
-            }
-          );
-          const refreshToken = jwt.sign(
-            {
-              username: email[0].username,
-              userId: email[0].user_id,
-            },
-            mm16zrefreshtoken,
-            {
-              expiresIn: "1d",
-            }
-          );
-          db.query(
-            "UPDATE `mm16-webboard`.`users` SET `refresh_token` =? WHERE (`email` =?)",
-            [refreshToken, email[0].email],
-            (err, result) => {
-              if (err) return res.json({ err: err });
-            }
-          );
-          res.cookie("jwtToken", refreshToken, {
-            httpOnly: true,
-            secure: true,
-            maxAge: 24 * 60 * 60 * 1000,
-            sameSite: "none",
-          });
-          // res.cookie("userId", email[0].user_id, {
-          //   httpOnly: true,
-          //   secure: true,
-          //   sameSite: "none",
-          // });
-          res.json({
-            status: "ok",
-            message: "login success",
-            accessToken,
-          });
-        } else {
-          res.json({ status: "error", message: err });
-        }
-      });
+router.post("/login", jsonParser, async (req, res, next) => {
+  try {
+    const emailQuery = `SELECT * FROM "mm16-webboard".users WHERE email = $1`;
+    const emailResult = await db.any(emailQuery, [req.body.email]);
+
+    if (emailResult.length === 0) {
+      return res.json({ status: "error", message: "user not found" });
     }
-  );
+
+    const user = emailResult[0];
+
+    bcrypt.compare(req.body.password, user.password, (err, isLogin) => {
+      if (isLogin) {
+        const accessToken = jwt.sign(
+          {
+            email: user.email,
+            username: user.username,
+            userId: user.user_id,
+          },
+          mm16ztoken,
+          {
+            expiresIn: "900s",
+          }
+        );
+        const refreshToken = jwt.sign(
+          {
+            username: user.username,
+            userId: user.user_id,
+          },
+          mm16zrefreshtoken,
+          {
+            expiresIn: "1d",
+          }
+        );
+
+        const updateRefreshTokenQuery = `UPDATE "mm16-webboard".users SET refresh_token = $1 WHERE email = $2`;
+        db.none(updateRefreshTokenQuery, [refreshToken, user.email]);
+
+        res.cookie("jwtToken", refreshToken, {
+          httpOnly: true,
+          secure: true,
+          maxAge: 24 * 60 * 60 * 1000,
+          sameSite: "none",
+        });
+
+        res.json({
+          status: "ok",
+          message: "login success",
+          accessToken,
+        });
+      } else {
+        res.json({ status: "error", message: err });
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({ status: "error", message: error });
+  }
 });
 
 module.exports = router;
