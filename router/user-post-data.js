@@ -37,8 +37,8 @@ router.get("/user_posts/:offset", async (req, res) => {
         ) AS comments
       FROM
       "mm16-webboard".posts
-        LEFT JOIN postliked ON postliked.at_post_id = posts.post_id AND postliked.user_id = $1
-        GROUP BY post_id , postliked.user_id
+        LEFT JOIN "mm16-webboard".postliked ON postliked.at_post_id = posts.post_id AND postliked.user_id = $1
+        GROUP BY post_id
         ORDER BY post_id ASC
         LIMIT 6
         offset $2`;
