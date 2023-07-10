@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model comments {
+  comment_id        Int      @id(map: "comments_pk") @default(autoincrement())
+  comment_from      String   @db.VarChar
+  comment_content   String
+  comment_createdat DateTime @db.Timestamptz(2)
+  at_post_id        Int
+  posts             posts    @relation(fields: [at_post_id], references: [post_id], onDelete: Cascade, map: "comments_fk")
+}
+
+model postliked {
+  post_liked_id Int   @default(autoincrement())
+  at_post_id    Int
+  user_id       Int
+  id            Int   @id @default(autoincrement())
+  posts         posts @relation(fields: [at_post_id], references: [post_id], onDelete: NoAction, onUpdate: NoAction, map: "postliked_fk")
+  users         users @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "postliked_fk_1")
+
+  @@unique([user_id, at_post_id], map: "postliked_un")
+  @@unique([post_liked_id, at_post_id], map: "unique_postliked_ids")
+}
+
+model posts {
+  post_id          Int         @id(map: "posts_pk") @default(autoincrement())
+  post_from        String      @db.VarChar
+  post_title       String      @db.VarChar
+  post_content     String
+  post_createdat   DateTime    @db.Timestamptz(2)
+  post_from_userid Int
+  comments         comments[]
+  postliked        postliked[]
+  users            users       @relation(fields: [post_from_userid], references: [user_id], onUpdate: Restrict, map: "posts_fk")
+}
+
+model users {
+  user_id       Int         @id(map: "users_pk") @default(autoincrement())
+  username      String      @db.VarChar
+  email         String      @db.VarChar
+  password      String      @db.VarChar
+  create_time   DateTime    @db.Timestamptz(2)
+  refresh_token String?     @db.VarChar
+  postliked     postliked[]
+  posts         posts[]
+
+  @@unique([refresh_token, username, email], map: "users_un")
+}
