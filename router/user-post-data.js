@@ -91,10 +91,7 @@ router.get("/user_posts/:offset", async (req, res) => {
         post_id: 'asc'
       },
       take: 6,
-      skip: offset,
-      _count: {
-        select: { post_id: true }
-      }
+      skip: offset
     });
 
     const postIds = allPosts.map(post => post.post_id);
@@ -109,8 +106,6 @@ router.get("/user_posts/:offset", async (req, res) => {
       _count: true
     });
 
-    const postCount = allPosts._count.post_id;
-
     const combinedPosts = allPosts.map(post => {
       const likedCount = postLikedCounts.find(count => count.at_post_id === post.post_id);
       const isLiked = post.postliked.some(like => like.user_id === currentUserId);
@@ -120,6 +115,8 @@ router.get("/user_posts/:offset", async (req, res) => {
         post_liked_count: likedCount ? likedCount._count : 0
       };
     });
+
+    const postCount = await prisma.posts.count();
 
     res.json({
       allPosts: combinedPosts,
