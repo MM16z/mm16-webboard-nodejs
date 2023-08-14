@@ -118,6 +118,7 @@ router.post("/user_post_comment", jsonParser, async (req, res, next) => {
             post_id: req.body.postid
         }
       }
+      comment_createdat: new Date()
     };
 
     await prisma.comments.create({
