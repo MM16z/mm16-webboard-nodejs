@@ -117,7 +117,7 @@ router.post("/user_post_comment", jsonParser, async (req, res, next) => {
         connect: {
             post_id: req.body.postid
         }
-      }
+      },
       comment_createdat: new Date()
     };
 
