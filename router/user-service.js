@@ -34,6 +34,7 @@ router.post("/user_post_create", jsonParser, async (req, res, next) => {
         post_from: req.body.postfrom,
         post_title: req.body.posttitle,
         post_content: req.body.postcontent,
+        post_createdat: new Date(),
         users: {
           connect: {
             user_id: req.body.postfromuserid
@@ -112,7 +113,11 @@ router.post("/user_post_comment", jsonParser, async (req, res, next) => {
     const commentData = {
       comment_from: req.body.postfrom,
       comment_content: req.body.postcontent,
-      at_post_id: req.body.postid
+      posts: {
+        connect: {
+            post_id: req.body.postid
+        }
+      }
     };
 
     await prisma.comments.create({
