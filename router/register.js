@@ -20,7 +20,8 @@ router.post("/register", jsonParser, (req, res, next) => {
       const userData = {
         username: req.body.username,
         email: req.body.email,
-        password: hash
+        password: hash,
+        create_time: new Date()
       };
 
       await prisma.users.create({
