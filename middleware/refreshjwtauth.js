@@ -13,7 +13,14 @@ const mm16ztoken = "mm16z-login-token-1616";
 const mm16zrefreshtoken = "mm16z-login-refresh-token-1616";
 
 router.post("/refreshjwtauth", jsonParser, async (req, res, next) => {
-    res.setHeader("Access-Control-Allow-Origin", "https://mm16z-webboard-nextjs-fullstack.vercel.app, http://localhost:3000");
+    const allowedOrigins = [
+        "https://mm16z-webboard-nextjs-fullstack.vercel.app",
+        "http://localhost:3000"
+    ];
+    const origin = req.headers.origin;
+    if (allowedOrigins.includes(origin)) {
+        res.setHeader("Access-Control-Allow-Origin", origin);
+    }
     const cookies = req.cookies;
     if (!cookies?.jwtToken) return res.sendStatus(401);
     const refreshToken = cookies.jwtToken;
