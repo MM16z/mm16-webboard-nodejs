@@ -133,6 +133,7 @@ router.get("/current_user_posts", async (req, res) => {
     const currentUserId = Number(req.query.currentUserId) || null;
     try {
         //if admin get all posts data
+        if (!currentUserId) return res.json({error: "no current user id"});
         if (currentUserId && currentUserId === 1) {
             const allPosts = await prisma.posts.findMany({
                 select: {
