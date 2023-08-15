@@ -132,6 +132,21 @@ router.post("/user_post_comment", jsonParser, async (req, res, next) => {
   }
 });
 
+router.post("/user_post_comment_delete", jsonParser, async (req, res, next) => {
+  try {
+    const commentId = req.body.commentId;
+    await prisma.comments.delete({
+      where: {
+        comment_id: commentId
+      }
+    });
+    res.json({ status: "ok", message: "Success" });
+  } catch (error) {
+    console.log(error);
+    res.json({ status: "error", message: error });
+  }
+});
+
 router.post("/user_post_liked", jsonParser, async (req, res, next) => {
   try {
     // const query = `INSERT INTO "mm16-webboard".postliked (user_id, at_post_id) VALUES ($1, $2)`;
