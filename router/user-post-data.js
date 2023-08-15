@@ -149,15 +149,16 @@ router.get("/current_user_posts", async (req, res) => {
             res.json({
                 userPostData: allPosts
             });
-        } else {
-            const userPostData = await prisma.posts.findMany({
-                where: {
-                    post_from_userid: currentUserId ?? undefined
-                }
-            });
-
-            res.json({userPostData: userPostData});
+            return;
         }
+        const userPostData = await prisma.posts.findMany({
+            where: {
+                post_from_userid: currentUserId ?? undefined
+            }
+        });
+
+        res.json({userPostData: userPostData});
+
     } catch (error) {
         console.log(error);
         res.json({error});
