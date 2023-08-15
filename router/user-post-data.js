@@ -133,7 +133,7 @@ router.get("/current_user_posts", async (req, res) => {
     const currentUserId = Number(req.query.currentUserId) || null;
     try {
         //if admin get all posts data
-        if (currentUserId === 4) {
+        if (currentUserId && currentUserId === 1) {
             const allPosts = await prisma.posts.findMany({
                 select: {
                     post_id: true,
