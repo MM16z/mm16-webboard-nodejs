@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "rhel-openssl-1.0.x"]
 }
 
@@ -18,15 +18,13 @@ model comments {
 }
 
 model postliked {
-  post_liked_id Int   @default(autoincrement())
-  at_post_id    Int
-  user_id       Int
-  id            Int   @id @default(autoincrement())
-  posts         posts @relation(fields: [at_post_id], references: [post_id], onDelete: NoAction, onUpdate: NoAction, map: "postliked_fk")
-  users         users @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "postliked_fk_1")
+  at_post_id Int
+  user_id    Int
+  id         Int   @id @default(autoincrement())
+  posts      posts @relation(fields: [at_post_id], references: [post_id], onDelete: Cascade, map: "postliked_fk")
+  users      users @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "postliked_fk_1")
 
   @@unique([user_id, at_post_id], map: "postliked_un")
-  @@unique([post_liked_id, at_post_id], map: "unique_postliked_ids")
 }
 
 model posts {
@@ -42,14 +40,12 @@ model posts {
 }
 
 model users {
-  user_id       Int         @id(map: "users_pk") @default(autoincrement())
-  username      String      @db.VarChar
-  email         String      @db.VarChar
+  user_id       Int         @id(map: "users_pk") @unique(map: "users_un_id") @default(autoincrement())
+  username      String      @unique(map: "users_un_username") @db.VarChar
+  email         String      @unique(map: "users_un_email") @db.VarChar
   password      String      @db.VarChar
   create_time   DateTime    @db.Timestamptz(2)
   refresh_token String?     @db.VarChar
   postliked     postliked[]
   posts         posts[]
-
-  @@unique([refresh_token, username, email], map: "users_un")
 }
