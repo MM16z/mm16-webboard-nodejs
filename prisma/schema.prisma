@@ -18,7 +18,6 @@ model comments {
 }
 
 model postliked {
-  post_liked_id Int   @default(autoincrement())
   at_post_id    Int
   user_id       Int
   id            Int   @id @default(autoincrement())
