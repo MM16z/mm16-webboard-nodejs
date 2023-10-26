@@ -10,6 +10,7 @@ CREATE TABLE "comments" (
 
 -- CreateTable
 CREATE TABLE "postliked" (
+    "post_liked_id" SERIAL NOT NULL,
     "at_post_id" INTEGER NOT NULL,
     "user_id" INTEGER NOT NULL,
     "id" SERIAL NOT NULL,
