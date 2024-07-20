@@ -2,7 +2,7 @@ require("dotenv").config();
 const pgp = require("pg-promise")();
 
 const db = pgp(
-  `postgres://${process.env.USER}:${process.env.PASSWORD}@${process.env.DBHOST}:${process.env.DBPORT}/${process.env.DATABASE}`
+  `postgres://${process.env.USER}:${process.env.PASSWORD}@${process.env.DBHOST}/${process.env.DATABASE}`
 );
 
 // const db = mysql.createConnection({
