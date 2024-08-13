@@ -13,8 +13,8 @@ const logoutRouter = require("./router/logout");
 const userServiceRouter = require("./router/user-service");
 const userPostDataRouter = require("./router/user-post-data");
 
-const PORT = process.env.APPPORT ?? process.env.PORT;
-const HOST = process.env.HOST;
+const PORT = process.env.APPPORT || 3001;
+const HOST = process.env.HOST || "0.0.0.0";
 
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.urlencoded({ extended: false }));
@@ -34,5 +34,5 @@ app.use("/", userServiceRouter);
 app.use("/", logoutRouter);
 
 app.listen(PORT, HOST, () => {
-  console.log(`runing on http://localhost:${PORT}`);
+  console.log(`runing on ${HOST}:${PORT}`);
 });
